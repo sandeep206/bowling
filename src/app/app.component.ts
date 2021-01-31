@@ -161,6 +161,6 @@ export class AppComponent implements OnInit {
     );
   }
   isGutter(value: number): boolean {
-    return !!value;
+    return !value;
   }
 }
