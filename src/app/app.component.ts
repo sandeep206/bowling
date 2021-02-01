@@ -71,23 +71,6 @@ export class AppComponent implements OnInit {
       ? previousFrame.score
       : currentFrame.score;
 
-    if (
-      prePreviousFrame &&
-      prePreviousFrame.isStrike &&
-      previousFrame.isStrike
-    ) {
-      // for all contineous strikes
-      const start = i - 2;
-      const current = i + 1;
-
-      const rolls: Roll[] = this.getRollsFrom(start, current);
-
-      // update score board
-      prePreviousFrame.score =
-        this.getTotalPins(rolls) + prePreviousFrame.previousScore;
-      previousFrame.previousScore = prePreviousFrame.score;
-    }
-
     if (currentAttempt === 3) {
       const start = i;
       const current = i + 1;
@@ -135,6 +118,29 @@ export class AppComponent implements OnInit {
         currentFrame.score += previousFrame.score;
       }
       currentFrame.previousScore = previousFrame.score; // to handle 1st spare and 2nd strike
+    }
+
+    if (
+      prePreviousFrame &&
+      prePreviousFrame.isStrike &&
+      previousFrame.isStrike
+    ) {
+      // for all contineous strikes
+      const start = i - 2;
+      const previous = i === this.lastFrame ? i : i + 1;
+
+      let rolls: Roll[] = this.getRollsFrom(start, previous);
+
+      if (i === this.lastFrame) {
+        const lastFrameRolls = this.frames[i].roll.slice(0, currentAttempt);
+        rolls = [...rolls, ...lastFrameRolls];
+      }
+
+      if (currentAttempt !== 2) {
+        prePreviousFrame.score =
+          this.getTotalPins(rolls) + prePreviousFrame.previousScore;
+        previousFrame.previousScore = prePreviousFrame.score;
+      }
     }
   }
 
