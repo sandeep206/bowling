@@ -14,6 +14,8 @@ export class AppComponent implements OnInit {
   rollThree = [];
   index: number;
   lastFrame = 9;
+  isFirstAttempt: boolean = true;
+  isLastAttempt: boolean = false;
 
   ngOnInit() {
     this.frames = initFrames();
@@ -48,6 +50,11 @@ export class AppComponent implements OnInit {
 
     // update score for previous frame
     this.updateScore(attempt);
+    this.isFirstAttempt = this.frames[this.index].isStrike
+      ? this.index === this.lastFrame
+        ? false
+        : true
+      : false;
   }
 
   getRollsFrom(start: number, current: number): Roll[] {
@@ -151,6 +158,8 @@ export class AppComponent implements OnInit {
       this.frames[this.index]
     );
     this.updateScore(attempt);
+    this.isFirstAttempt = true;
+    this.isLastAttempt = this.index === this.lastFrame ? true : false;
   }
 
   rollThreeChange(value: number, attempt: Attempt = 3) {
