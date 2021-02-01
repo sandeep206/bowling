@@ -11,7 +11,9 @@ export class AppComponent implements OnInit {
   frames = [];
   rollOne = [];
   rollTwo = [];
+  rollThree = [];
   index: number;
+  lastFrame = 9;
 
   ngOnInit() {
     this.frames = initFrames();
@@ -36,6 +38,7 @@ export class AppComponent implements OnInit {
     this.updateRollTwo(+value);
 
     const currentFrame: Frame = this.frames[this.index];
+
     // update the frame and score board
     this.frames[this.index] = this.updateCurrentFrame(
       attempt,
@@ -60,12 +63,41 @@ export class AppComponent implements OnInit {
   updateScore(currentAttempt: Attempt) {
     // loop through the frames
     const i = this.index;
+    const prePreviousFrame: Frame = i - 2 >= 0 ? this.frames[i - 2] : undefined;
     const previousFrame: Frame = i - 1 >= 0 ? this.frames[i - 1] : undefined;
     const currentFrame: Frame = this.frames[i];
 
     currentFrame.previousScore = previousFrame
       ? previousFrame.score
       : currentFrame.score;
+
+    if (
+      prePreviousFrame &&
+      prePreviousFrame.isStrike &&
+      previousFrame.isStrike
+    ) {
+      // for all contineous strikes
+      const start = i - 2;
+      const current = i + 1;
+
+      const rolls: Roll[] = this.getRollsFrom(start, current);
+
+      // update score board
+      prePreviousFrame.score =
+        this.getTotalPins(rolls) + prePreviousFrame.previousScore;
+      previousFrame.previousScore = prePreviousFrame.score;
+    }
+
+    if (currentAttempt === 3) {
+      const start = i;
+      const current = i + 1;
+
+      const rolls = this.getRollsFrom(start, current);
+
+      // update score board
+      currentFrame.score =
+        this.getTotalPins(rolls) + currentFrame.previousScore;
+    }
 
     if (!currentFrame.isStrike && !currentFrame.isSpare && currentAttempt > 1) {
       const start = i;
@@ -115,14 +147,38 @@ export class AppComponent implements OnInit {
     this.updateScore(attempt);
   }
 
+  rollThreeChange(value: number, attempt: Attempt = 3) {
+    this.frames[this.index] = this.updateCurrentFrame(
+      attempt,
+      +value,
+      this.frames[this.index]
+    );
+    // update the score
+    this.updateScore(attempt);
+    // show final result
+  }
+
   updateCurrentFrame(attempt: Attempt, value: number, frame: Frame): Frame {
-    const newFrame = {
+    let newFrame = {
       ...frame,
       roll: this.updateHit(attempt, value, frame.roll),
       isGutter: this.isGutter(value),
       isStrike: this.isStrike(value, attempt),
       isSpare: this.isSpare(frame.roll, attempt)
     };
+
+    // check if last frame, then add extra roll for spare and strike
+    if (this.isLastFrameSpecial(newFrame, attempt)) {
+      this.rollThree = [0, ...SEQUENCE_NUMBERS];
+      const newRoll: Roll = {
+        roll: 3,
+        hit: 0
+      };
+      newFrame = {
+        ...newFrame,
+        roll: [...newFrame.roll, newRoll]
+      };
+    }
 
     return newFrame;
   }
@@ -141,7 +197,9 @@ export class AppComponent implements OnInit {
   }
 
   updateRollTwo(selectedValue): void {
-    if (selectedValue !== 10) {
+    if (this.index === this.lastFrame) {
+      this.rollTwo = [0, ...SEQUENCE_NUMBERS];
+    } else if (selectedValue !== 10) {
       const length = SEQUENCE_NUMBERS.length - selectedValue + 1;
       this.rollTwo = Array.from({ length }, (x, i) => i);
     } else {
@@ -149,17 +207,26 @@ export class AppComponent implements OnInit {
     }
   }
 
+  isLastFrameSpecial(frame: Frame, attempt: Attempt): boolean {
+    return (
+      this.index === this.lastFrame &&
+      ((frame.isStrike && attempt === 1) || (frame.isSpare && attempt === 2))
+    );
+  }
+
   isStrike(value: number, attempt: Attempt): boolean {
     return (
       attempt === 1 && value === SEQUENCE_NUMBERS[SEQUENCE_NUMBERS.length - 1]
     );
   }
+
   isSpare(rolls: Roll[], attempt: Attempt): boolean {
     return (
       attempt === 2 &&
       this.getTotalPins(rolls) === SEQUENCE_NUMBERS[SEQUENCE_NUMBERS.length - 1]
     );
   }
+
   isGutter(value: number): boolean {
     return !value;
   }

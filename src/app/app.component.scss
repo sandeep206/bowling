@@ -17,6 +17,22 @@
   flex-direction: column;
 }
 
+.select-pins {
+  display: flex;
+  flex-direction: column;
+  height: 120px;
+
+  .title {
+    display: inline-block;
+    width: 80px;
+    border: 1px solid green;
+  }
+  .btn {
+    padding: 5px;
+    margin: 5px;
+  }
+}
+
 .score-board {
   border: 1px solid red;
   width: 90vw;

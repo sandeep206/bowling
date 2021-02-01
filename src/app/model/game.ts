@@ -19,14 +19,3 @@ export interface Game {
   player: string;
   total: number;
 }
-
-// For later:
-// export interface Game {
-//   user: User[]
-// }
-
-// export interface User {
-//   frame: Frame[];
-//   player: string;
-//   total: number;
-// }

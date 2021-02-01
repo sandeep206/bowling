@@ -2,25 +2,30 @@
   <section class="container">
     <section class="display-pins"></section>
     <section class="select-pins">
-      Roll One<select name="roll1" id="roll1" (change)="rollOneChange($event.target.value)">
-        <option>Select a value</option>
-        <option *ngFor="let roll of rollOne"> {{roll}}</option>
-      </select>
-      Roll Two<select name="roll2" id="roll2" (change)="rollTwoChange($event.target.value)"
-        [disabled]="!rollTwo.length">
-        <option>Select a value</option>
-        <option *ngFor="let roll of rollTwo"> {{roll}}</option>
-      </select>
+      <div>
+        <span class="title">Roll One</span>
+        <button class="btn" *ngFor="let roll of rollOne; let i" (click)="rollOneChange(roll)">{{i}}</button>
+      </div>
+      <div *ngIf="rollTwo.length">
+        <span class="title">Roll Two</span>
+        <button class="btn" *ngFor="let roll of rollTwo; let i" (click)="rollTwoChange(roll)">{{i}}</button>
+      </div>
+      <div *ngIf="rollThree.length">
+        <span class="title">Roll Three</span>
+        <button class="btn" *ngFor="let roll of rollThree; let i" (click)="rollThreeChange(roll)">{{i}}</button>
+      </div>
     </section>
   </section>
   <section class="score-board">
-    <div class="frame" *ngFor="let frame of frames">
-      <div class="title">{{frame.frame + 1}}</div>
+    <div class="frame" *ngFor="let item of frames">
+      <div class="title">{{item.frame + 1}}</div>
       <div class="content">
-        <div class="roll" *ngFor="let roll of frame.roll">{{roll.hit}}</div>
+        <div class="roll" *ngFor="let roll of item.roll; let i">
+          <span>{{roll.hit}}</span>
+        </div>
 
       </div>
-      <div class="total">Total pins: {{frame.score}}</div>
+      <div class="total">{{item.score}}</div>
     </div>
   </section>
 </div>
