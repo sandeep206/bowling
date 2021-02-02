@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   rollTwo = [];
   rollThree = [];
   index: number;
-  lastFrame = 9;
+  lastFrame = SEQUENCE_NUMBERS.length - 1;
   isFirstAttempt = true;
   isLastAttempt = false;
 

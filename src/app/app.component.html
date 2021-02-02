@@ -1,7 +1,7 @@
 <div class="wrapper">
   <section class="container">
     <section class="select-pins">
-      <div *ngIf="isFirstAttempt && !rollThree.length">
+      <div *ngIf="isFirstAttempt && !rollThree.length && !frames[lastFrame].score">
         <button class="btn" id="rollOne-{{i}}" *ngFor="let roll of rollOne; let i"
           (click)="rollOneChange(roll); ">{{i}}</button>
       </div>
@@ -9,13 +9,13 @@
         <button class="btn" id="rollTwo-{{i}}" *ngFor="let roll of rollTwo; let i"
           (click)="rollTwoChange(roll)">{{i}}</button>
       </div>
-      <div *ngIf="rollThree.length && isLastAttempt">
+      <div *ngIf="rollThree.length && isLastAttempt && !frames[lastFrame].score">
         <button class="btn" id="rollThree-{{i}}" *ngFor="let roll of rollThree; let i"
           (click)="rollThreeChange(roll)">{{i}}</button>
       </div>
     </section>
     <section>
-      <h2 class="final-score" *ngIf="lastFrame === index || frames[lastFrame].score">
+      <h2 class="final-score" *ngIf="frames[lastFrame].score">
         Final Score is {{frames[lastFrame].score}}
       </h2>
     </section>
@@ -27,7 +27,6 @@
         <div class="roll" *ngFor="let roll of item.roll">
           <span>{{roll.hit}}</span>
         </div>
-
       </div>
       <div class="total" id="total-{{item.frame}}">{{item.score}}</div>
     </div>
