@@ -152,14 +152,16 @@ export class AppComponent implements OnInit {
   }
 
   rollTwoChange(value: number, attempt: Attempt = 2) {
-    this.frames[this.index] = this.updateCurrentFrame(
-      attempt,
-      +value,
-      this.frames[this.index]
-    );
-    this.updateScore(attempt);
-    this.isFirstAttempt = true;
-    this.isLastAttempt = this.index === this.lastFrame ? true : false;
+    if (!this.shouldSkipBowling()) {
+      this.frames[this.index] = this.updateCurrentFrame(
+        attempt,
+        +value,
+        this.frames[this.index]
+      );
+      this.updateScore(attempt);
+      this.isFirstAttempt = true;
+      this.isLastAttempt = this.index === this.lastFrame ? true : false;
+    }
   }
 
   rollThreeChange(value: number, attempt: Attempt = 3) {
@@ -244,5 +246,9 @@ export class AppComponent implements OnInit {
 
   isGutter(value: number): boolean {
     return !value;
+  }
+
+  shouldSkipBowling() {
+    return this.frames[this.index].isStrike && this.index !== this.lastFrame;
   }
 }
