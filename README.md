@@ -2,8 +2,6 @@
 
 Build a logic to display the traditional score in bowling game.
 
--
-
 ## Development server
 
 Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
@@ -25,5 +23,6 @@ Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.
 - enable e2e testing
 - implement pipes to display special icons on scoreboard.
 - abstract common template in presentational components
+- beautification of scoreboard.
 
 To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
