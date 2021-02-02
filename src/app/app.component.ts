@@ -14,29 +14,29 @@ export class AppComponent implements OnInit {
   rollThree = [];
   index: number;
   lastFrame = 9;
-  isFirstAttempt: boolean = true;
-  isLastAttempt: boolean = false;
+  isFirstAttempt = true;
+  isLastAttempt = false;
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.frames = initFrames();
     this.rollOne = [0, ...SEQUENCE_NUMBERS];
   }
 
-  startPlaying() {
+  startPlaying(): void {
     this.index = this.index || 0;
   }
-  continuePlaying() {
+  continuePlaying(): void {
     this.index =
       this.index < SEQUENCE_NUMBERS.length ? ++this.index : this.index;
   }
 
-  rollOneChange(value: number, attempt: Attempt = 1) {
+  rollOneChange(value: number, attempt: Attempt = 1): void {
     // set the frame number
     this.index || this.index === 0
       ? this.continuePlaying()
       : this.startPlaying();
 
-    //get the possible values for roll two
+    // get the possible values for roll two
     this.updateRollTwo(+value);
 
     const currentFrame: Frame = this.frames[this.index];
@@ -67,7 +67,7 @@ export class AppComponent implements OnInit {
     return rolls;
   }
 
-  updateScore(currentAttempt: Attempt) {
+  updateScore(currentAttempt: Attempt): void {
     // loop through the frames
     const i = this.index;
     const prePreviousFrame: Frame = i - 2 >= 0 ? this.frames[i - 2] : undefined;
@@ -151,7 +151,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  rollTwoChange(value: number, attempt: Attempt = 2) {
+  rollTwoChange(value: number, attempt: Attempt = 2): void {
     if (!this.shouldSkipBowling()) {
       this.frames[this.index] = this.updateCurrentFrame(
         attempt,
@@ -164,7 +164,7 @@ export class AppComponent implements OnInit {
     }
   }
 
-  rollThreeChange(value: number, attempt: Attempt = 3) {
+  rollThreeChange(value: number, attempt: Attempt = 3): void {
     this.frames[this.index] = this.updateCurrentFrame(
       attempt,
       +value,
@@ -248,7 +248,7 @@ export class AppComponent implements OnInit {
     return !value;
   }
 
-  shouldSkipBowling() {
+  shouldSkipBowling(): boolean {
     return this.frames[this.index].isStrike && this.index !== this.lastFrame;
   }
 }

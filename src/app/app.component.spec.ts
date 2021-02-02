@@ -83,7 +83,7 @@ describe('Bolwing games', () => {
     expect(app.frames[9].score).toBe(300);
   });
 
-  let throwBowl = (limit: number, pins: number) => {
+  const throwBowl = (limit: number, pins: number) => {
     for (let i = 0; i < limit; i++) {
       app.rollOneChange(pins);
       fixture.detectChanges();
